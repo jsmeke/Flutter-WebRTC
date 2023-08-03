@@ -32,7 +32,8 @@ class RemoteDataSource {
     await roomRef.update(roomWithAnswer);
   }
 
-  Future<RTCSessionDescription?> getRoomOfferIfExists({required String roomId}) async {
+  Future<RTCSessionDescription?> getRoomOfferIfExists(
+      {required String roomId}) async {
     final roomDoc = await _db.collection(_roomsCollection).doc(roomId).get();
     if (!roomDoc.exists) {
       return null;
@@ -75,7 +76,8 @@ class RemoteDataSource {
       (snapshot) {
         final docChangesList = listenCaller
             ? snapshot.docChanges
-            : snapshot.docChanges.where((change) => change.type == DocumentChangeType.added);
+            : snapshot.docChanges
+                .where((change) => change.type == DocumentChangeType.added);
         return docChangesList.map((change) {
           final data = change.doc.data() as Map<String, dynamic>;
           return RTCIceCandidate(
@@ -96,6 +98,7 @@ class RemoteDataSource {
   }) async {
     final roomRef = _db.collection(_roomsCollection).doc(roomId);
     final candidatesCollection = roomRef.collection(_candidatesCollection);
-    await candidatesCollection.add(candidate.toMap()..[_candidateUidField] = userId);
+    await candidatesCollection
+        .add(candidate.toMap()..[_candidateUidField] = userId);
   }
 }
